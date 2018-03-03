@@ -16,6 +16,13 @@ def find_color(bgr_array):
 # 1st webcam source
 cap = cv2.VideoCapture(0)
 
+# Output file
+codec = cv2.VideoWriter_fourcc(*'XVID')
+outfile = cv2.VideoWriter('Original Raw.avi', codec, 20.0, (640, 480))
+result_outfile = cv2.VideoWriter('Result.avi', codec, 20.0, (640, 480))
+median_blur_outfile = cv2.VideoWriter('Green Median Blur Filter.avi', codec,
+                                      20.0, (640, 480))
+
 while 1:
     _, frame = cap.read()
     # another way to read colors - hsv used for range purposes
@@ -57,9 +64,17 @@ while 1:
     cv2.imshow('Color Filtering Video Median Blur', median)
     # cv2.imshow('Color Filtering Video Bilateral Blur', bilateral)
 
+    outfile.write(frame)
+    result_outfile.write(result)
+    median_blur_outfile.write(median)
+
     # Close all on 'q' press
     k = cv2.waitKey(5) & 0xFF
     if k == ord('q'):
         break
+
 cv2.destroyAllWindows()
+outfile.release()
+result_outfile.release()
+median_blur_outfile.release()
 cap.release()
